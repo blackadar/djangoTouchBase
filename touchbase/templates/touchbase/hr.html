@@ -1,0 +1,26 @@
+{% extends 'touchbase/base.html' %}
+
+{% block head %}
+<meta http-equiv="refresh" content="120" >
+{% endblock %}
+
+{% block content %}
+
+    <h2>{% if group %}<mark><a href="{% url 'touchbase:select_group' %}?next={% url 'touchbase:hr' %}">{{ group }}</a></mark> {% endif %}Homeroom Absences, {% now 'SHORT_DATETIME_FORMAT' %}</h2>
+
+    {% if hr_absences %}
+        <ul>
+            {% for student in hr_absences %}
+                <li><a href="{% url 'admin:touchbase_student_change' student.id %}">{{ student.full_name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No students marked absent from homeroom, yet. 🎉</p>
+    {% endif %}
+
+    {% if not group %}
+    <br>
+    <a href="{% url 'touchbase:select_group' %}?next={% url 'touchbase:hr' %}">Select Group</a>
+    {% endif %}
+
+{% endblock %}

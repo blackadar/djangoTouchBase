@@ -1,0 +1,87 @@
+{% extends 'touchbase/base.html' %}
+{% load static %}
+
+{% block head %}
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <h2>Welcome, new user.</h2>
+    <p>Tell me about your position, and the type of access you'll need.</p>
+    <p>Be sure to include your organization provided e-mail address.</p>
+    <p>You can expect a response within a couple business days.</p>
+
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css"/>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
+    <div class="content form-content">
+        <div class="row justify-content-start">
+            <form role="form" id="contact-form" class="contact-form" method="post" action="{% url 'touchbase:contact_submit' %}">
+                {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="name" autocomplete="off" id="name" placeholder="Full Name">
+                            </div>
+                        </div>
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="email" class="form-control" name="email" autocomplete="off" id="email" placeholder="E-mail">
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                            <div class="form-group">
+                                <textarea class="form-control textarea" rows="3" name="message" id="message" placeholder="Details"></textarea>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-12">
+                      <button type="submit" class="btn main-btn pull-right">Request Access</button>
+                      </div>
+                      </div>
+                    </form>
+        </div>
+    </div>
+    <script>
+    $('#contact-form').bootstrapValidator({
+//        live: 'disabled',
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            Name: {
+                validators: {
+                    notEmpty: {
+                        message: 'Required'
+                    }
+                }
+            },
+            email: {
+                validators: {
+                    notEmpty: {
+                        message: 'Required'
+                    },
+                    emailAddress: {
+                        message: 'Invalid'
+                    }
+                }
+            },
+            Message: {
+                validators: {
+                    notEmpty: {
+                        message: 'Required'
+                    }
+                }
+            }
+        }
+    });
+    </script>
+
+{% endblock %}

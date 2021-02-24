@@ -1,0 +1,26 @@
+{% extends 'touchbase/base.html' %}
+
+{% block content %}
+    {% comment %}<div class="alert alert-danger alert-dismissible fade show">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success!</strong> Indicates a successful or positive action.
+    </div>{% endcomment %}
+
+    {% if user.is_authenticated %}
+        <h2 class="fade-in-text">Good {% if current_time >= 17 %}evening{% elif current_time >= 12%}afternoon{% elif current_time >= 4%}morning{% else %}evening{% endif %}, {{ user.get_short_name }}.</h2>
+        <h3 class="fade-in-text a">{{ truancies_today }} <small class="text-muted">{% if truancies_today != 1 %}truancies{% else %}truancy{% endif %} reported today</small></h3>
+        <h3 class="fade-in-text b">{{ absent_today }} <small class="text-muted">{% if absent_today != 1 %}students{% else %}student{% endif %} marked absent</small></h3>
+        <h3 class="fade-in-text c">{{ to_discuss }} <small class="text-muted">{% if to_discuss != 1 %}issues{% else %}issue{% endif %} to discuss</small></h3>
+        <br>
+        <h3 class="fade-in-text d"><a href="{% url 'admin:touchbase_student_changelist' %}">Manage Students</a></h3>
+
+    {% else %}
+        <h2 class="animated fade-in-text">Hello, there.</h2>
+        <p>If you have credentials, please <a href="{% url 'login' %}?next={% url 'touchbase:index' %}">log in</a>.</p>
+        <p>Otherwise, to request access, <a href="{% url 'touchbase:contact' %}">tell me about yourself</a>.</p>
+
+    {% endif %}
+
+
+
+{% endblock %}

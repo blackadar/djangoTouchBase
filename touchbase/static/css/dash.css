@@ -1,0 +1,5 @@
+#container {height: auto; width:100%; font-size:0;}
+#left, #middle, #right {display: inline-block; *display: inline; zoom: 1; vertical-align: top; padding-left: 5px; padding-right: 5px;}
+#left {width: 33%;}
+#middle {width: 33%;}
+#right {width: 33%; }

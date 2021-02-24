@@ -1,0 +1,129 @@
+{% extends 'touchbase/base.html' %}
+{% load static %}
+
+{% block head %}
+<!-- Charts.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link rel="stylesheet" href="{% static 'css/dash.css' %}">
+    <meta http-equiv="refresh" content="120" >
+{% endblock %}
+
+{% block content %}
+<div id="container">
+    <div id="left"><canvas id="truancyChart" width="500" height="500" style="max-width: 100%;"></canvas></div>
+    <div id="middle"><canvas id="groupChart" width="500" height="600" style="max-width: 100%;"></canvas></div>
+    <div id="right"><canvas id="issueChart" width="500" height="450" style="max-width: 100%;"></canvas></div>
+</div>
+
+<script>
+var t_ctx = document.getElementById('truancyChart').getContext('2d');
+var t_chart = new Chart(t_ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: {{ dates | safe }},
+        datasets: [{
+            label: 'Absences',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            fill: false,
+            data: {{ d_absences | safe }}
+        },
+        {
+            label: 'Tardies',
+            backgroundColor: 'rgb(255,185,99)',
+            borderColor: 'rgb(255,185,99)',
+            fill: false,
+            data: {{ d_tardies | safe }}
+        },
+        {
+            label: 'Skips',
+            backgroundColor: 'rgb(99,115,255)',
+            borderColor: 'rgb(99,115,255)',
+            fill: false,
+            data: {{ d_skips | safe }}
+        },]
+    },
+
+    // Configuration options go here
+    options: {
+        title: {
+            display: true,
+            text: 'Truancies Since ' + {{ dates | safe }}[0],
+        },
+        responsive: true,
+        scales: {
+            xAxes: [{
+                ticks: {
+                    autoSkip: false,
+                    maxRotation: 90,
+                    minRotation: 45
+                }
+            }]
+        }
+    }
+});
+var colors = [
+    'rgba(123,241,241, 0.5)',
+    'rgba(30,57,234, 0.5)',
+    'rgba(33,34,34, 0.5)',
+    'rgba(227,26,50, 0.5)',
+    'rgba(39,196,129, 0.5)',
+]
+var r_ctx = document.getElementById('groupChart').getContext('2d');
+var r_chart = new Chart(r_ctx, {
+    type: 'radar',
+    data: {
+    labels: ['Absences', 'Tardies', 'Skips'],
+    datasets: [
+        {% for g in g_pack %}
+            {
+                label: '{{ g.0|safe }}',
+                data: [{{ g.1 }}, {{ g.3 }}, {{ g.2 }}],
+                backgroundColor: colors[{{ forloop.counter0 }}],
+            },
+        {% endfor %}
+    ]
+},
+    options: {
+        title: {
+            display: true,
+            text: 'Truancies by Group Since ' + {{ dates | safe }}[0],
+        },
+         tooltips: {
+                enabled: true,
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        return data.datasets[tooltipItem.datasetIndex].label + ' : ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                    }
+                }
+            }
+    }
+});
+
+var i_ctx = document.getElementById('issueChart').getContext('2d');
+var i_chart = new Chart(i_ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ["Absences", "Tardies", "Skips"],
+      datasets: [
+        {
+          data: [{{ t_absences }}, {{ t_tardies }}, {{ t_skips }}],
+          backgroundColor: [
+             'rgb(255, 99, 132)',
+             'rgb(255,185,99)',
+             'rgb(99,115,255)',
+          ]
+      }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Truancies by Type Since ' + {{ dates | safe }}[0],
+        },
+    }
+});
+</script>
+{% endblock %}

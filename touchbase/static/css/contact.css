@@ -1,0 +1,7 @@
+.contact-form{ margin-top:15px;}
+.contact-form .textarea{ min-height:220px; resize:none;}
+.form-control{ box-shadow:none; border-color:#eee; height:49px;}
+.form-control:focus{ box-shadow:none; border-color:#407590;}
+.main-btn{ background:#407590; border-color:#407590; color:#fff;}
+.main-btn:hover{ background:#407590;color:#fff;}
+.form-content{ padding-left: 10px}
